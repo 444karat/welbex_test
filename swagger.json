@@ -1,0 +1,174 @@
+{
+  "swagger": "2.0",
+  "host": "localhost:8000",
+  "basePath": "/",
+
+  "paths": {
+    "/auth":{
+      "post": {
+        "tags": ["auth + registration"],
+        "summary": "Если пользователя нет в бд, то он его зарегистрирует",
+        "parameters": [
+          {
+            "name": "login",
+            "in": "string",
+            "required":true
+          },
+          {
+            "name": "password",
+            "in": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description":"successful operation",
+            "schema": {
+              "$ref": "#/definitions/auth"
+            }
+          }
+        }
+      }
+    },
+    "/blogs": {
+      "post": {
+        "tags": ["blog"],
+        "summary": "создает новый блог, можно загрузить массив из 10 файлов ",
+        "security": [{
+          "api-key":[
+            "create:blog",
+            "update:blog",
+            "delete:blog"
+          ]
+
+        }],
+        "parameters": [
+          {
+          "name": "text",
+          "in": "string",
+          "required": true
+          },
+          {
+            "name":"file1",
+            "in":"formData",
+            "description":"file to upload ",
+            "required":false,
+            "type":"file"
+          },
+          {
+            "name":"file_next",
+            "in":"formData",
+            "description":"их может быть по сути до 10 штук",
+            "required":false,
+            "type":"file"
+          }
+        ],
+        "responses": {
+          "200":{
+            "description":"successful operation",
+            "schema": {
+              "$ref": "#/definitions/blog"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["blog"],
+        "summary": "я сдела только обновления text поля ",
+        "security": [{
+          "api-key":[
+            "create:blog",
+            "update:blog",
+            "delete:blog"
+          ]
+
+        }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200":{
+            "description":"successful operation"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["blog"],
+        "summary": "удаляет и блог, и файлы из бд, и файлы из ./storage ",
+        "security": [{
+          "api-key":[
+            "create:blog",
+            "update:blog",
+            "delete:blog"
+          ]
+
+        }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "id",
+            "required": true
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "x-auth-token": {
+      "type":"apiKey",
+      "name":"x-auth-token",
+      "in":"header"
+    }
+  },
+  "definitions": {
+    "auth": {
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example":"true"
+        },
+        "user": {
+          "type": "object",
+          "example":{
+            "id": "",
+            "login": "",
+            "password": "",
+            "updatedAt": "",
+            "createdAt": ""
+          }
+        },
+        "Authorization": {
+          "type": "jwt"
+        }
+      }
+
+    },
+    "blog": {
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example":"true"
+        },
+        "blog": {
+          "type": "object",
+          "example":{
+            "id": "",
+            "text": "",
+            "userId": "",
+            "updatedAt": "",
+            "createdAt": ""
+          }
+        }
+      }
+
+    }
+  },
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"]
+
+}
