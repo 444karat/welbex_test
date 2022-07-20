@@ -49,14 +49,14 @@
           "required": true
           },
           {
-            "name":"file1",
+            "name":"File",
             "in":"formData",
             "description":"file to upload ",
             "required":false,
             "type":"file"
           },
           {
-            "name":"file_next",
+            "name":"File",
             "in":"formData",
             "description":"их может быть по сути до 10 штук",
             "required":false,
